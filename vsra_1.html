@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VSRA – Vancouver Seniors Resources Alliance</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#1a2b4a; --navy-light:#243860; --teal:#2a7a7a; --teal-light:#3a9a9a;
+    --teal-pale:#e8f5f5; --off-white:#f7f9fb; --muted:#5a6a7a; --border:#d0dde8; --accent:#e8a020;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;font-size:18px;color:var(--navy);background:var(--off-white);line-height:1.6;}
+
+  /* ── HEADER ── */
+  header{background:var(--navy);color:white;padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:72px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25);}
+  .logo{display:flex;align-items:center;gap:.75rem;}
+  .logo-icon{width:40px;height:40px;background:var(--teal);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+  .logo-text{font-family:'Merriweather',serif;font-size:1.55rem;font-weight:700;line-height:1.1;letter-spacing:.02em;}
+  .logo-sub{font-size:.68rem;font-weight:600;opacity:.8;letter-spacing:.04em;text-transform:uppercase;margin-top:1px;}
+
+  /* Main nav */
+  .main-nav{display:flex;align-items:center;gap:.5rem;}
+  .main-nav .nav-btn{background:linear-gradient(135deg,#1a6a8a 0%,#2a9a9a 100%);border:none;color:white;padding:.5rem 1.1rem;border-radius:6px;font-size:.95rem;font-family:'Source Sans 3',sans-serif;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+  .main-nav .nav-btn:hover{background:linear-gradient(135deg,#1f7ca0 0%,#32b8b8 100%);box-shadow:0 3px 12px rgba(0,0,0,.35);}
+  .main-nav .nav-btn.active{background:linear-gradient(135deg,#0e4f6a 0%,#1a7a7a 100%);box-shadow:inset 0 2px 6px rgba(0,0,0,.25);}
+
+  /* Hamburger */
+  .hamburger{background:transparent;border:2px solid rgba(255,255,255,.3);color:white;width:44px;height:44px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:all .2s;flex-shrink:0;}
+  .hamburger:hover{background:var(--teal);border-color:var(--teal);}
+  .hamburger span{display:block;width:18px;height:2px;background:white;border-radius:2px;transition:all .2s;}
+
+  /* Full menu panel */
+  .menu-drawer{position:fixed;top:72px;left:0;right:0;background:var(--navy);max-height:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1);z-index:190;box-shadow:0 8px 32px rgba(0,0,0,.35);}
+  .menu-drawer.open{max-height:280px;}
+  .menu-drawer-inner{display:flex;align-items:flex-start;gap:0;max-width:1200px;margin:0 auto;padding:1.75rem 2rem;}
+  .menu-col{display:flex;flex-direction:column;gap:.15rem;min-width:180px;}
+  .menu-search-col{flex:1;}
+  .menu-col-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.45);margin-bottom:.6rem;padding-left:.4rem;}
+  .menu-item{color:rgba(255,255,255,.88);font-size:1rem;font-weight:600;font-family:'Source Sans 3',sans-serif;padding:.48rem .75rem;border-radius:7px;cursor:pointer;transition:background .15s, color .15s;text-decoration:none;display:block;}
+  .menu-item:hover{background:rgba(255,255,255,.1);color:white;}
+  .menu-divider{width:1px;background:rgba(255,255,255,.1);margin:0 1.5rem;align-self:stretch;}
+  .menu-search-row{display:flex;gap:.6rem;}
+  .menu-search-row input{flex:1;padding:.72rem 1rem;font-size:1rem;border:none;border-radius:8px;font-family:'Source Sans 3',sans-serif;outline:none;background:rgba(255,255,255,.1);color:white;border:1.5px solid rgba(255,255,255,.2);}
+  .menu-search-row input::placeholder{color:rgba(255,255,255,.4);}
+  .menu-search-row input:focus{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.4);}
+  .menu-search-row button{background:var(--teal);color:white;border:none;padding:.72rem 1.2rem;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;}
+  @media(max-width:640px){
+    .menu-drawer.open{max-height:520px;}
+    .menu-drawer-inner{flex-direction:column;gap:1rem;padding:1.25rem 1.5rem;}
+    .menu-divider{width:100%;height:1px;margin:.2rem 0;}
+    .menu-col{min-width:unset;}
+  }
+
+  /* ── HERO — diner sign style ── */
+  .hero{background:linear-gradient(150deg,var(--navy-light) 0%,var(--teal) 100%);color:white;padding:2.8rem 2rem 4.5rem;position:relative;}
+  .hero-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;}
+  .hero-left{flex:0 0 auto;}
+  .hero-welcome{font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:600;opacity:.75;text-transform:uppercase;letter-spacing:.14em;margin-bottom:.1rem;}
+  .hero-title{font-family:'Merriweather',serif;font-size:6rem;font-weight:700;line-height:.92;letter-spacing:-.01em;margin-bottom:.5rem;}
+  .hero-fullname{font-family:'Source Sans 3',sans-serif;font-size:1.05rem;font-weight:600;opacity:.8;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.6rem;}
+  .hero-desc{font-size:1.05rem;opacity:.85;max-width:420px;line-height:1.55;}
+
+  /* Right decorative panel — only visible on wide screens */
+  .hero-right{flex:0 0 340px;display:none;}
+  @media(min-width:860px){.hero-right{display:block;}}
+  .hero-panel{background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.2);border-radius:16px;padding:1.4rem 1.6rem;backdrop-filter:blur(4px);}
+  .hero-panel-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:1.1rem;}
+  .hero-stat{display:flex;align-items:center;gap:.9rem;padding:.65rem 0;border-bottom:1px solid rgba(255,255,255,.12);}
+  .hero-stat:last-child{border-bottom:none;}
+  .hero-stat-icon{width:36px;height:36px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .hero-stat-label{font-size:.88rem;opacity:.78;line-height:1.2;}
+  .hero-stat-val{font-size:1.18rem;font-weight:700;line-height:1.1;}
+
+  /* Floating oval — straddles the hero/content boundary */
+  .search-oval-wrap{position:relative;max-width:1200px;margin:0 auto;height:0;}
+  .search-oval{position:absolute;left:50%;transform:translate(-50%, -50%);background:white;border-radius:999px;padding:.65rem .65rem .65rem 1.4rem;display:flex;align-items:center;gap:.6rem;box-shadow:0 6px 28px rgba(0,0,0,.18);width:min(580px,90vw);z-index:10;}
+  .search-oval input{flex:1;border:none;outline:none;font-size:1.05rem;font-family:'Source Sans 3',sans-serif;color:var(--navy);background:transparent;min-width:0;}
+  .search-oval input::placeholder{color:#9aacba;}
+  .search-oval button{background:var(--teal);color:white;border:none;padding:.62rem 1.3rem;border-radius:999px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;white-space:nowrap;transition:background .2s;flex-shrink:0;}
+  .search-oval button:hover{background:var(--teal-light);}
+
+  /* The oval is ~46px tall, sits half above/half below the boundary.
+     So top padding = half oval height (23px) + desired gap (~28px) = ~51px,
+     rounded to a clean 3rem to match the gap feel. */
+  main{max-width:1200px;margin:0 auto;padding:3rem 2rem 2rem;}
+  .section{display:none;} .section.active{display:block;}
+  .section-title{font-family:'Merriweather',serif;font-size:1.7rem;color:var(--navy);margin-bottom:.4rem;}
+  .section-subtitle{color:var(--muted);margin-bottom:1.5rem;font-size:1.05rem;}
+
+  .view-tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+  .view-tab{background:white;border:2px solid var(--border);color:var(--navy);padding:.7rem 1.4rem;border-radius:8px;font-size:1.05rem;font-family:'Source Sans 3',sans-serif;font-weight:600;cursor:pointer;transition:all .2s;}
+  .view-tab:hover{border-color:var(--teal);color:var(--teal);}
+  .view-tab.active{background:var(--teal);border-color:var(--teal);color:white;}
+
+  /* MAP */
+  .map-layout{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start;}
+  .map-container{background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);overflow:visible;position:relative;}
+  .map-container svg{width:100%;height:auto;display:block;overflow:visible;}
+
+  .n-zone{fill:#cdd8ae;stroke:white;stroke-width:1.8;cursor:pointer;transition:fill .18s;}
+  .n-zone:hover{fill:#a8ba72;}
+  .n-zone.selected{fill:#5a8a3a;}
+  .n-zone.has-res{fill:#b8ca88;}
+
+  .n-label{font-family:'Source Sans 3',sans-serif;font-size:9px;font-weight:800;fill:#3a3010;text-anchor:middle;pointer-events:none;user-select:none;letter-spacing:.02em;}
+  .n-leader{stroke:#888;stroke-width:.8;fill:none;pointer-events:none;stroke-dasharray:3 2;}
+
+  .map-legend{padding:.75rem 1.25rem;background:var(--off-white);border-top:1px solid var(--border);display:flex;gap:1.25rem;flex-wrap:wrap;border-radius:0 0 12px 12px;}
+  .legend-item{display:flex;align-items:center;gap:.4rem;font-size:.85rem;color:var(--muted);}
+  .legend-swatch{width:16px;height:16px;border-radius:3px;border:1.5px solid rgba(0,0,0,.12);flex-shrink:0;}
+  .map-tip{position:absolute;background:var(--navy);color:white;padding:.3rem .65rem;border-radius:5px;font-size:.85rem;font-weight:600;pointer-events:none;opacity:0;transition:opacity .12s;white-space:nowrap;z-index:20;}
+
+  /* SIDEBAR */
+  .sidebar-panel{background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);overflow:hidden;}
+  .sidebar-header{background:var(--navy);color:white;padding:1.1rem 1.4rem;}
+  .sidebar-header h3{font-family:'Merriweather',serif;font-size:1.1rem;margin-bottom:.15rem;}
+  .sidebar-header p{font-size:.88rem;opacity:.8;}
+  .sidebar-body{padding:1rem;}
+  .nb-list{list-style:none;display:flex;flex-direction:column;gap:.22rem;max-height:520px;overflow-y:auto;}
+  .nb-list li{display:flex;align-items:center;justify-content:space-between;padding:.48rem .7rem;border-radius:6px;cursor:pointer;transition:background .14s;border:1.5px solid transparent;}
+  .nb-list li:hover{background:var(--teal-pale);}
+  .nb-list li.selected{background:var(--teal-pale);border-color:var(--teal-light);}
+  .nb-list .nn{font-weight:600;font-size:.9rem;}
+  .nb-list .nc{background:var(--teal);color:white;border-radius:999px;padding:.04rem .48rem;font-size:.72rem;font-weight:700;}
+
+  /* RESOURCES */
+  .resource-panel{background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);margin-top:1.5rem;overflow:hidden;}
+  .rp-header{background:var(--teal);color:white;padding:.9rem 1.4rem;display:flex;align-items:center;justify-content:space-between;}
+  .rp-header h3{font-family:'Merriweather',serif;font-size:1.05rem;}
+  .rp-body{padding:1.1rem;}
+  .r-card{border:1.5px solid var(--border);border-radius:8px;padding:.9rem 1.1rem;margin-bottom:.65rem;transition:border-color .2s,box-shadow .2s;}
+  .r-card:hover{border-color:var(--teal-light);box-shadow:0 2px 8px rgba(42,122,122,.1);}
+  .r-top{display:flex;align-items:flex-start;gap:.7rem;margin-bottom:.35rem;}
+  .r-icon{width:36px;height:36px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+  .r-card h4{font-size:1rem;font-weight:700;color:var(--navy);}
+  .r-card .r-meta{font-size:.88rem;color:var(--muted);margin-bottom:.25rem;}
+  .r-card .r-phone{font-size:.95rem;font-weight:600;color:var(--teal);}
+  .cat-tag{display:inline-block;padding:.12rem .55rem;border-radius:999px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}
+  .empty-state{text-align:center;padding:2.5rem 2rem;color:var(--muted);}
+  .empty-state .ei{font-size:2.5rem;margin-bottom:.75rem;}
+
+  .category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:.9rem;margin-bottom:1.5rem;}
+  .cat-card{background:white;border:2px solid var(--border);border-radius:12px;padding:1.6rem 1.1rem 1.4rem;text-align:center;cursor:pointer;transition:all .2s;}
+  .cat-card:hover,.cat-card.selected{border-color:var(--teal);box-shadow:0 4px 14px rgba(42,122,122,.14);transform:translateY(-2px);}
+  .cat-card.selected{background:var(--teal-pale);}
+  .cat-card .ci{font-size:2rem;margin-bottom:.55rem;}
+  .cat-card .cn{font-weight:800;font-size:1.05rem;color:var(--navy);line-height:1.25;text-transform:uppercase;letter-spacing:.04em;}
+  .nbhood-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:.9rem;}
+  .nb-card{background:white;border:2px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem;cursor:pointer;transition:all .2s;}
+  .nb-card:hover{border-color:var(--teal);box-shadow:0 4px 14px rgba(42,122,122,.12);}
+  .nb-card h3{font-family:'Merriweather',serif;font-size:1.05rem;color:var(--navy);margin-bottom:.4rem;}
+  .nb-card .ntags{display:flex;flex-wrap:wrap;gap:.25rem;}
+
+  footer{background:var(--navy);color:rgba(255,255,255,.7);text-align:center;padding:2rem;margin-top:4rem;font-size:.93rem;}
+  footer strong{color:white;}
+
+  @media(max-width:920px){.map-layout{grid-template-columns:1fr;}}
+  @media(max-width:700px){.main-nav .nav-btn{padding:.45rem .7rem;font-size:.88rem;} .logo-text{font-size:.95rem;} .hero h1{font-size:1.8rem;}}
+  @media(max-width:480px){header{padding:0 1rem;} .logo-sub{display:none;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🌿</div>
+    <div>
+      <div class="logo-text">VSRA</div>
+      <div class="logo-sub">Find Senior Support in Vancouver</div>
+    </div>
+  </div>
+  <div class="main-nav">
+    <button class="nav-btn active" onclick="showSection('home')">🏠 Home</button>
+    <button class="nav-btn" onclick="showSection('news')">📰 News</button>
+    <button class="nav-btn" onclick="showSection('contact')">✉️ Contact Us</button>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger-btn" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Full menu panel — slides down from header -->
+<div class="menu-drawer" id="menu-drawer">
+  <div class="menu-drawer-inner">
+    <div class="menu-col">
+      <div class="menu-col-title">Navigate</div>
+      <a class="menu-item" onclick="showSection('home');toggleMenu()">🏠 Home</a>
+      <a class="menu-item" onclick="showSection('news');toggleMenu()">📰 News</a>
+      <a class="menu-item" onclick="showSection('about');toggleMenu()">ℹ️ About Us</a>
+      <a class="menu-item" onclick="showSection('contact');toggleMenu()">✉️ Contact Us</a>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-col">
+      <div class="menu-col-title">Find Resources</div>
+      <a class="menu-item" onclick="showSection('resources');setView('map');toggleMenu()">🗺️ Map View</a>
+      <a class="menu-item" onclick="showSection('resources');setView('neighbourhood');toggleMenu()">🏘️ By Neighbourhood</a>
+      <a class="menu-item" onclick="showSection('resources');setView('category');toggleMenu()">🗂️ By Category</a>
+    </div>
+    <div class="menu-divider"></div>
+    <div class="menu-col menu-search-col">
+      <div class="menu-col-title">Search</div>
+      <div class="menu-search-row">
+        <input type="text" id="search-input-drawer" placeholder="Search resources…" onkeydown="if(event.key==='Enter'){handleSearch();toggleMenu();}"/>
+        <button onclick="handleSearch();toggleMenu()">Go</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="home" class="section active">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-welcome">Welcome to</div>
+        <div class="hero-title">VSRA</div>
+        <div class="hero-fullname">Vancouver Seniors Resources Alliance</div>
+        <div class="hero-desc">Your free guide to seniors services, medical care, housing, and community programs across Vancouver.</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-panel">
+          <div class="hero-panel-title">Latest News</div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">📰</div>
+            <div><div class="hero-stat-val">VSRA Launches</div><div class="hero-stat-label">March 2026 — Directory now live across all Vancouver</div></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">🏘️</div>
+            <div><div class="hero-stat-val">38 Neighbourhoods</div><div class="hero-stat-label">Full coverage across the city</div></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">🗂️</div>
+            <div><div class="hero-stat-val">8 Categories</div><div class="hero-stat-label">Medical, housing, social, food & more</div></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">🆓</div>
+            <div><div class="hero-stat-val">Always Free</div><div class="hero-stat-label">No sign-up, no cost, no ads</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating oval search pill — sits on the boundary line -->
+  <div class="search-oval-wrap">
+    <div class="search-oval">
+      <input type="text" id="search-input" placeholder="Search by service, neighbourhood, or category…" onkeydown="if(event.key==='Enter')handleSearch()"/>
+      <button onclick="handleSearch()">Search</button>
+    </div>
+  </div>
+
+  <main>
+    <h2 class="section-title" style="margin-bottom:.4rem;">Browse by Category</h2>
+    <p class="section-subtitle">Click any category to see all matching services across Vancouver.</p>
+    <div class="category-grid" id="home-cats"></div>
+    <div style="margin-top:.5rem;background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:1.1rem 1.4rem;font-size:1.05rem;color:var(--muted);">
+      👉 <a href="#" onclick="showSection('resources');setView('map');return false;" style="color:var(--teal);font-weight:700;text-decoration:none;">Browse the interactive neighbourhood map →</a>
+    </div>
+  </main>
+</section>
+
+<section id="resources" class="section">
+  <div class="hero" style="padding:1.75rem 2rem;">
+    <div style="max-width:1200px;margin:0 auto;text-align:left;">
+      <div class="view-tabs">
+        <button class="view-tab active" id="tab-map" onclick="setView('map')">🗺️ Map View</button>
+        <button class="view-tab" id="tab-neighbourhood" onclick="setView('neighbourhood')">🏘️ By Neighbourhood</button>
+        <button class="view-tab" id="tab-category" onclick="setView('category')">🗂️ By Category</button>
+      </div>
+    </div>
+  </div>
+  <main>
+    <div id="view-map">
+      <h2 class="section-title">Find Resources on the Map</h2>
+      <p class="section-subtitle">Click a neighbourhood to see services in that area.</p>
+      <div class="map-layout">
+        <div>
+          <div class="map-container" id="map-wrap">
+            <div class="map-tip" id="map-tip"></div>
+            <svg viewBox="0 0 900 780" id="vcmap" xmlns="http://www.w3.org/2000/svg" style="overflow:visible;">
+
+              <!-- Water background -->
+              <rect x="0" y="0" width="900" height="780" fill="#b8d4e8"/>
+
+              <!-- Fraser River south band -->
+              <rect x="0" y="684" width="900" height="96" fill="#8ab8d0"/>
+              <text x="450" y="730" text-anchor="middle" font-family="Source Sans 3,sans-serif" font-size="13" fill="#4a7a95" font-style="italic">Fraser River</text>
+
+              <!-- Burrard Inlet north band -->
+              <path d="M0,0 L900,0 L900,75 Q750,70 650,75 Q500,82 380,78 Q250,85 130,80 Q65,85 0,82 Z" fill="#8ab8d0"/>
+              <text x="200" y="45" text-anchor="middle" font-family="Source Sans 3,sans-serif" font-size="12" fill="#4a7a95" font-style="italic">Burrard Inlet</text>
+
+              <!-- English Bay (west coast indentation) -->
+              <path d="M0,145 Q25,120 55,115 Q90,110 115,122 L129,226 Q95,210 65,232 Q30,245 0,242 Z" fill="#b8d4e8"/>
+
+              <!-- False Creek water body -->
+              <path d="M192,128 Q215,120 232,132 L232,148 Q215,155 192,148 Z" fill="#8ab8d0" opacity="0.8"/>
+              <text x="212" y="143" text-anchor="middle" font-family="Source Sans 3,sans-serif" font-size="7" fill="#3a6a80" font-style="italic" transform="scale(1.8,1.8) translate(-118,-80)">False Creek</text>
+
+              <!-- Land base -->
+              <path fill="#e8e0c8" stroke="#c8b888" stroke-width="1" d="
+                M55,115 Q90,110 115,122 L129,226 L142,226 L142,122 L178,128 L212,65 L250,58 L450,72
+                L492,70 L500,120 L500,684 L0,684 L0,242 Q30,245 65,232 Q90,110 55,115 Z
+              "/>
+
+              <!-- NEIGHBOURHOOD ZONES (generated) -->
+
+              <!-- LABELS (generated) -->
+
+              <!-- Compass -->
+              <g transform="translate(858,96)">
+                <circle r="20" fill="white" stroke="#ccc" stroke-width="1.5" opacity="0.92"/>
+                <text text-anchor="middle" y="-5" font-size="9" font-weight="800" fill="#1a2b4a" font-family="Source Sans 3,sans-serif">N</text>
+                <polygon points="0,-14 3,-5 0,-9 -3,-5" fill="#1a2b4a"/>
+                <text text-anchor="middle" y="15" font-size="7" fill="#888" font-family="Source Sans 3,sans-serif">S</text>
+                <text x="6" y="2" font-size="7" fill="#888" font-family="Source Sans 3,sans-serif">E</text>
+                <text x="-8" y="2" font-size="7" fill="#888" font-family="Source Sans 3,sans-serif" text-anchor="end">W</text>
+              </g>
+
+              <!-- Scale bar -->
+              <g transform="translate(28,660)">
+                <rect x="0" y="0" width="50" height="4" fill="#6a7a5a"/>
+                <rect x="50" y="0" width="50" height="4" fill="white" stroke="#6a7a5a" stroke-width="0.8"/>
+                <text x="0" y="14" font-size="8" fill="#6a7a5a" font-family="Source Sans 3,sans-serif">0</text>
+                <text x="44" y="14" font-size="8" fill="#6a7a5a" font-family="Source Sans 3,sans-serif">2 km</text>
+                <text x="96" y="14" font-size="8" fill="#6a7a5a" font-family="Source Sans 3,sans-serif">4 km</text>
+              </g>
+            </svg>
+          </div>
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-swatch" style="background:#cdd8ae;"></div>Neighbourhood</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#b8ca88;"></div>Has Resources</div>
+            <div class="legend-item"><div class="legend-swatch" style="background:#5a8a3a;"></div>Selected</div>
+          </div>
+        </div>
+        <div>
+          <div class="sidebar-panel">
+            <div class="sidebar-header"><h3>Neighbourhoods</h3><p>Click to filter resources</p></div>
+            <div class="sidebar-body"><ul class="nb-list" id="map-nb-list"></ul></div>
+          </div>
+        </div>
+      </div>
+      <div class="resource-panel" id="map-rp" style="display:none;">
+        <div class="rp-header"><h3 id="map-rp-title">Resources</h3><span id="map-rp-count" style="font-size:.88rem;opacity:.85;"></span></div>
+        <div class="rp-body" id="map-rp-body"></div>
+      </div>
+    </div>
+
+    <div id="view-neighbourhood" style="display:none;">
+      <h2 class="section-title">Browse by Neighbourhood</h2>
+      <p class="section-subtitle">Select your neighbourhood to see all available services.</p>
+      <div class="nbhood-grid" id="nb-grid"></div>
+      <div class="resource-panel" id="nb-rp" style="display:none;margin-top:1.5rem;">
+        <div class="rp-header"><h3 id="nb-rp-title">Resources</h3><span id="nb-rp-count" style="font-size:.88rem;opacity:.85;"></span></div>
+        <div class="rp-body" id="nb-rp-body"></div>
+      </div>
+    </div>
+
+    <div id="view-category" style="display:none;">
+      <h2 class="section-title">Browse by Category</h2>
+      <p class="section-subtitle">Choose a type of service to see all options across Vancouver.</p>
+      <div class="category-grid" id="cat-grid"></div>
+      <div class="resource-panel" id="cat-rp" style="display:none;margin-top:1.5rem;">
+        <div class="rp-header"><h3 id="cat-rp-title">Resources</h3><span id="cat-rp-count" style="font-size:.88rem;opacity:.85;"></span></div>
+        <div class="rp-body" id="cat-rp-body"></div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section id="about" class="section">
+  <div class="hero"><h1>About VSRA</h1><p>The Vancouver Seniors Resources Alliance connects seniors to services, programs, and supports across all Vancouver neighbourhoods.</p></div>
+  <main style="max-width:700px;">
+    <h2 class="section-title" style="margin-bottom:1rem;">Our Mission</h2>
+    <p style="font-size:1.1rem;line-height:1.75;margin-bottom:1.5rem;">We believe every senior in Vancouver should be able to find the support they need, close to home and easy to access. This directory is free, up-to-date, and organized to be as simple as possible to use.</p>
+    <p style="font-size:1.1rem;line-height:1.75;margin-bottom:2rem;">Whether you're looking for medical care, social programs, housing help, or just a place to connect with others — this is your starting point.</p>
+    <div style="background:var(--teal-pale);border-left:4px solid var(--teal);padding:1.1rem 1.4rem;border-radius:0 8px 8px 0;font-size:1.05rem;">
+      <strong style="color:var(--teal);">Know of a missing resource?</strong><br>Please contact us and we'll add it to the directory.
+    </div>
+  </main>
+</section>
+
+<section id="news" class="section">
+  <div class="hero" style="padding:2.5rem 2rem 4rem;">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-welcome">Latest from</div>
+        <div class="hero-title" style="font-size:3.2rem;">News</div>
+        <div class="hero-desc">Updates from VSRA and the Vancouver seniors community.</div>
+      </div>
+    </div>
+  </div>
+  <div class="search-oval-wrap"><div style="height:0"></div></div>
+  <main style="padding-top:2rem;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem;">
+      <div style="background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);overflow:hidden;">
+        <div style="background:var(--teal);height:6px;"></div>
+        <div style="padding:1.4rem 1.5rem;">
+          <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--teal);margin-bottom:.4rem;">March 2026</div>
+          <h3 style="font-family:'Merriweather',serif;font-size:1.1rem;color:var(--navy);margin-bottom:.6rem;">VSRA Directory Launches</h3>
+          <p style="font-size:.95rem;color:var(--muted);line-height:1.6;">The Vancouver Seniors Resources Alliance is pleased to launch this free directory connecting seniors across all Vancouver neighbourhoods to the services they need.</p>
+        </div>
+      </div>
+      <div style="background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);overflow:hidden;border:2px dashed var(--border);">
+        <div style="padding:1.4rem 1.5rem;text-align:center;color:var(--muted);padding-top:2rem;padding-bottom:2rem;">
+          <div style="font-size:2rem;margin-bottom:.5rem;">📰</div>
+          <p style="font-size:.95rem;">More news coming soon.<br>Have a story to share? <a href="#" onclick="showSection('contact');return false;" style="color:var(--teal);font-weight:700;">Contact us.</a></p>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section id="about" class="section">
+  <div class="hero" style="padding:2.5rem 2rem 4rem;">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-welcome">Learn more</div>
+        <div class="hero-title" style="font-size:3.2rem;">About Us</div>
+        <div class="hero-desc">Who we are and why we built this.</div>
+      </div>
+    </div>
+  </div>
+  <div class="search-oval-wrap"><div style="height:0"></div></div>
+  <main style="padding-top:2rem;max-width:700px;">
+    <div style="background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:2rem;">
+      <h2 style="font-family:'Merriweather',serif;font-size:1.4rem;color:var(--navy);margin-bottom:1rem;">Our Mission</h2>
+      <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.25rem;">We believe every senior in Vancouver should be able to find the support they need, close to home and easy to access. This directory is free, up-to-date, and organized to be as simple as possible to use.</p>
+      <p style="font-size:1.05rem;line-height:1.75;margin-bottom:1.5rem;">Whether you're looking for medical care, social programs, housing help, or just a place to connect with others — this is your starting point.</p>
+      <div style="background:var(--teal-pale);border-left:4px solid var(--teal);padding:1rem 1.25rem;border-radius:0 8px 8px 0;">
+        <strong style="color:var(--teal);">Know of a missing resource?</strong><br>
+        <span style="font-size:.98rem;">Please <a href="#" onclick="showSection('contact');return false;" style="color:var(--teal);font-weight:700;">contact us</a> and we'll add it to the directory.</span>
+      </div>
+    </div>
+  </main>
+</section>
+
+<section id="contact" class="section">
+  <div class="hero" style="padding:2.8rem 2rem 4.5rem;">
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-welcome">Get in touch</div>
+        <div class="hero-title" style="font-size:3.2rem;">Contact Us</div>
+        <div class="hero-fullname">Vancouver Seniors Resources Alliance</div>
+        <div class="hero-desc">Know of a missing service? Have a question? We'd love to hear from you.</div>
+      </div>
+      <div class="hero-right">
+        <div class="hero-panel">
+          <div class="hero-panel-title">How We Can Help</div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">➕</div>
+            <div><div class="hero-stat-val">Add a Resource</div><div class="hero-stat-label">Tell us about a missing service or listing</div></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">✏️</div>
+            <div><div class="hero-stat-val">Update a Listing</div><div class="hero-stat-label">Correct outdated info or phone numbers</div></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">🤝</div>
+            <div><div class="hero-stat-val">Get Involved</div><div class="hero-stat-label">Volunteer, partner, or support the Alliance</div></div>
+          </div>
+          <div class="hero-stat">
+            <div class="hero-stat-icon">❓</div>
+            <div><div class="hero-stat-val">General Inquiries</div><div class="hero-stat-label">Any other questions or feedback</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-oval-wrap"><div style="height:0"></div></div>
+  <main style="padding-top:2rem;">
+    <div style="background:white;border-radius:12px;box-shadow:0 2px 16px rgba(0,0,0,.08);padding:2rem;max-width:620px;">
+      <p style="font-size:1.05rem;line-height:1.75;margin-bottom:2rem;color:var(--muted);">Fill out the form below and we'll get back to you as soon as possible.</p>
+      <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div><label style="display:block;font-weight:600;font-size:.9rem;margin-bottom:.4rem;color:var(--navy);">Your Name</label><input type="text" placeholder="Jane Smith" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;"/></div>
+          <div><label style="display:block;font-weight:600;font-size:.9rem;margin-bottom:.4rem;color:var(--navy);">Email Address</label><input type="email" placeholder="jane@email.com" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;"/></div>
+        </div>
+        <div><label style="display:block;font-weight:600;font-size:.9rem;margin-bottom:.4rem;color:var(--navy);">Subject</label><input type="text" placeholder="e.g. Add a resource, Update a listing…" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;"/></div>
+        <div><label style="display:block;font-weight:600;font-size:.9rem;margin-bottom:.4rem;color:var(--navy);">Message</label><textarea rows="5" placeholder="Tell us what you'd like to add, update, or ask…" style="width:100%;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:8px;font-size:1rem;font-family:'Source Sans 3',sans-serif;outline:none;resize:vertical;"></textarea></div>
+        <button style="background:var(--teal);color:white;border:none;padding:.85rem 2rem;border-radius:8px;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:'Source Sans 3',sans-serif;align-self:flex-start;">Send Message</button>
+      </div>
+    </div>
+  </main>
+</section>
+
+<footer>
+  <strong>Vancouver Seniors Resources Alliance</strong><br>
+  <span>A free community resource directory · Vancouver, BC</span>
+</footer>
+
+<script>
+const CATS=[
+  {id:'medical',label:'Medical & Health',icon:'🏥',bg:'#fce8e8',tc:'#8b1a1a'},
+  {id:'social',label:'Social & Community',icon:'🤝',bg:'#e8f0fe',tc:'#1a3a8b'},
+  {id:'housing',label:'Housing & Shelter',icon:'🏠',bg:'#e8fce8',tc:'#1a6b1a'},
+  {id:'transport',label:'Transportation',icon:'🚌',bg:'#fff4e8',tc:'#7a4010'},
+  {id:'food',label:'Food & Meals',icon:'🍽️',bg:'#fdf5e8',tc:'#7a5c10'},
+  {id:'legal',label:'Legal & Financial',icon:'⚖️',bg:'#f3e8fe',tc:'#4a1a7a'},
+  {id:'recreation',label:'Recreation & Fitness',icon:'🏊',bg:'#e8f8f0',tc:'#1a6b4a'},
+  {id:'mental',label:'Mental Health',icon:'💙',bg:'#e8f0f8',tc:'#1a3a5a'},
+];
+
+const RESOURCES=[
+  {name:'West End Community Centre',category:'social',neighbourhood:'West End',address:'870 Denman St',phone:'604-257-8333',description:'Seniors programs, fitness classes, drop-ins, and social events.'},
+  {name:"St. Paul's Hospital",category:'medical',neighbourhood:'West End',address:'1081 Burrard St',phone:'604-682-2344',description:'Full acute-care hospital with emergency, surgery, and specialist services.'},
+  {name:'Downtown Community Health Centre',category:'medical',neighbourhood:'Downtown Eastside',address:'569 Powell St',phone:'604-255-3151',description:'Primary care, walk-in services, and referrals.'},
+  {name:'Vancouver Public Library – Central',category:'social',neighbourhood:'Downtown',address:'350 W Georgia St',phone:'604-331-3603',description:'Programs, digital help desks, and a warm comfortable space.'},
+  {name:'Seniors Services Society',category:'social',neighbourhood:'Main',address:'3102 Main St',phone:'604-872-1601',description:'Advocacy, outreach, and referrals for seniors.'},
+  {name:'Raincity Housing',category:'housing',neighbourhood:'Downtown Eastside',address:'126 E Hastings St',phone:'604-338-8437',description:'Supportive housing and housing search assistance.'},
+  {name:'Renfrew Park Community Centre',category:'recreation',neighbourhood:'Renfrew',address:'2929 E 22nd Ave',phone:'604-257-8388',description:'Fitness, aquatics, and seniors programs and classes.'},
+  {name:'Killarney Community Centre',category:'recreation',neighbourhood:'Killarney',address:'6260 Killarney St',phone:'604-257-8116',description:'Pool, fitness centre, and wide range of seniors programs.'},
+  {name:'Kitsilano Community Centre',category:'social',neighbourhood:'Kitsilano',address:'2690 Larch St',phone:'604-257-6976',description:'Seniors programs, drop-ins, arts and fitness classes.'},
+  {name:'Vancouver General Hospital',category:'medical',neighbourhood:'Fairview',address:'899 W 12th Ave',phone:'604-875-4111',description:'Major academic hospital with full specialty care services.'},
+  {name:'BC Cancer – Vancouver Centre',category:'medical',neighbourhood:'Fairview',address:'600 W 10th Ave',phone:'604-877-6000',description:'Cancer care, treatment, and emotional support services.'},
+  {name:'Marpole Neighbourhood House',category:'social',neighbourhood:'Marpole',address:'7688 Windsor St',phone:'604-325-2952',description:'Meals, programs, and community connections for seniors.'},
+  {name:'Kerrisdale Community Centre',category:'recreation',neighbourhood:'Kerrisdale',address:'5851 West Blvd',phone:'604-257-8100',description:'Seniors fitness, aquatics, and arts programming.'},
+  {name:'Sunset Community Centre',category:'social',neighbourhood:'South Vancouver',address:'6810 Main St',phone:'604-718-6200',description:'Multicultural seniors programs and welcoming drop-ins.'},
+  {name:'Grandview Woodland Community Centre',category:'recreation',neighbourhood:'Grandview-Woodland',address:'1655 William St',phone:'604-718-5800',description:'Fitness, pool, and seniors programming.'},
+];
+
+const ALL_NB=['Arbutus','Cambie','Champlain Heights','Coal Harbour','Collingwood','Downtown','Downtown Eastside','Dunbar','Fairview','False Creek','Fraser','Fraser View','Grandview-Woodland','Hastings','Hastings-Sunrise','Kerrisdale','Killarney','Kitsilano','Knight','MacKenzie Heights','Main','Marpole','Mount Pleasant','Oakridge','Point Grey','Quilchena','Renfrew','Renfrew Heights','Shaughnessy','South Cambie','South Granville','South Marine','South Vancouver','Southlands','Strathcona','Victoria-Fraserview','West End','Yaletown'];
+
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',['home','news','contact'][i]===id));
+  document.getElementById('menu-drawer').classList.remove('open');
+  window.scrollTo(0,0);
+}
+function toggleMenu(){
+  const d=document.getElementById('menu-drawer');
+  d.classList.toggle('open');
+  if(d.classList.contains('open')) setTimeout(()=>document.getElementById('search-input-drawer')?.focus(),360);
+}
+// Close menu when clicking outside it
+document.addEventListener('click',function(e){
+  const drawer=document.getElementById('menu-drawer');
+  const btn=document.getElementById('hamburger-btn');
+  if(drawer.classList.contains('open') && !drawer.contains(e.target) && !btn.contains(e.target)){
+    drawer.classList.remove('open');
+  }
+});
+function setView(v){
+  ['map','neighbourhood','category'].forEach(n=>{
+    document.getElementById('view-'+n).style.display=n===v?'block':'none';
+    document.getElementById('tab-'+n).classList.toggle('active',n===v);
+  });
+}
+function tipShow(e,name){
+  const t=document.getElementById('map-tip'),r=document.getElementById('map-wrap').getBoundingClientRect();
+  t.textContent=name;t.style.left=(e.clientX-r.left+12)+'px';t.style.top=(e.clientY-r.top-34)+'px';t.style.opacity='1';
+}
+function tipHide(){document.getElementById('map-tip').style.opacity='0';}
+function selN(name){
+  document.querySelectorAll('.n-zone').forEach(z=>z.classList.toggle('selected',z.dataset.name===name));
+  document.querySelectorAll('.nb-list li').forEach(li=>li.classList.toggle('selected',li.dataset.name===name));
+  showRes(name,'map',false);
+}
+function buildMapSidebar(){
+  ALL_NB.forEach(n=>{
+    const c=RESOURCES.filter(r=>r.neighbourhood===n).length;
+    const z=document.querySelector('.n-zone[data-name="'+n+'"]');
+    if(z&&c>0)z.classList.add('has-res');
+  });
+  document.getElementById('map-nb-list').innerHTML=ALL_NB.map(n=>{
+    const c=RESOURCES.filter(r=>r.neighbourhood===n).length;
+    return`<li data-name="${n}" onclick="selN('${n}')"><span class="nn">${n}</span>${c>0?`<span class="nc">${c}</span>`:''}</li>`;
+  }).join('');
+}
+function showRes(filter,ctx,isCat){
+  const rs=isCat?RESOURCES.filter(r=>r.category===filter):RESOURCES.filter(r=>r.neighbourhood===filter);
+  const cat=isCat?CATS.find(c=>c.id===filter):null;
+  document.getElementById(ctx+'-rp-title').textContent=isCat?(cat?.icon+' '+cat?.label):filter;
+  document.getElementById(ctx+'-rp-count').textContent=rs.length+' resource'+(rs.length!==1?'s':'')+' found';
+  document.getElementById(ctx+'-rp-body').innerHTML=rs.length?rs.map(rCard).join(''):
+    '<div class="empty-state"><div class="ei">📋</div><p>No resources listed here yet.<br>Check back soon — we\'re always adding more.</p></div>';
+  const p=document.getElementById(ctx+'-rp');
+  p.style.display='block';p.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function rCard(r){
+  const cat=CATS.find(c=>c.id===r.category)||{icon:'📋',bg:'#eee',tc:'#333',label:r.category};
+  return`<div class="r-card"><div class="r-top"><div class="r-icon" style="background:${cat.bg}">${cat.icon}</div><div style="flex:1"><h4>${r.name}</h4><div class="r-meta">📍 ${r.neighbourhood} · ${r.address}</div></div><span class="cat-tag" style="background:${cat.bg};color:${cat.tc}">${cat.label}</span></div><p style="color:var(--muted);font-size:.92rem;margin-bottom:.3rem">${r.description}</p>${r.phone?`<div class="r-phone">📞 ${r.phone}</div>`:''}</div>`;
+}
+function buildNbGrid(){
+  document.getElementById('nb-grid').innerHTML=ALL_NB.map(n=>{
+    const rs=RESOURCES.filter(r=>r.neighbourhood===n);
+    const cats=[...new Set(rs.map(r=>r.category))].map(c=>CATS.find(x=>x.id===c)).filter(Boolean);
+    return`<div class="nb-card" onclick="showRes('${n}','nb',false)"><h3>${n}</h3><div class="ntags">${rs.length===0?'<span style="color:var(--muted);font-size:.88rem">No listings yet</span>':cats.map(c=>`<span class="cat-tag" style="background:${c.bg};color:${c.tc}">${c.icon} ${c.label}</span>`).join('')}</div></div>`;
+  }).join('');
+}
+function buildCatGrid(tid,fn){
+  document.getElementById(tid).innerHTML=CATS.map(cat=>{
+    const c=RESOURCES.filter(r=>r.category===cat.id).length;
+    return`<div class="cat-card" id="${tid}-${cat.id}" onclick="${fn}('${cat.id}')"><div class="ci">${cat.icon}</div><div class="cn">${cat.label}</div></div>`;
+  }).join('');
+}
+function selCat(id){
+  document.querySelectorAll('#cat-grid .cat-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('cat-grid-'+id)?.classList.add('selected');
+  showRes(id,'cat',true);
+}
+function selCatHome(id){showSection('resources');setView('category');setTimeout(()=>selCat(id),50);}
+function handleSearch(){
+  const oval=document.getElementById('search-input');
+  const drawer=document.getElementById('search-input-drawer');
+  const q=(oval?.value||drawer?.value||'').toLowerCase().trim();
+  if(!q)return;
+  document.getElementById('search-drawer').classList.remove('open');
+  showSection('resources');setView('category');
+  const rs=RESOURCES.filter(r=>r.name.toLowerCase().includes(q)||r.neighbourhood.toLowerCase().includes(q)||r.description.toLowerCase().includes(q)||(CATS.find(c=>c.id===r.category)?.label||'').toLowerCase().includes(q));
+  document.getElementById('cat-rp-title').textContent='Search: "'+q+'"';
+  document.getElementById('cat-rp-count').textContent=rs.length+' result'+(rs.length!==1?'s':'')+' found';
+  document.getElementById('cat-rp-body').innerHTML=rs.length?rs.map(rCard).join(''):
+    `<div class="empty-state"><div class="ei">🔍</div><p>No results for "<strong>${q}</strong>".</p></div>`;
+  document.getElementById('cat-rp').style.display='block';
+}
+buildMapSidebar();buildNbGrid();buildCatGrid('cat-grid','selCat');buildCatGrid('home-cats','selCatHome');setView('map');
+</script>
+</body>
+</html>
